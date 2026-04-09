@@ -1,0 +1,97 @@
+<section class="head">
+  <div>
+    <h2>Nueva venta</h2>
+    <p>Registra una nueva venta en el sistema.</p>
+  </div>
+</section>
+
+<app-error-banner [error]="posStore.error()" (dismiss)="posStore.clearError()" />
+
+<p *ngIf="successMessage()" class="success-msg">{{ successMessage() }}</p>
+
+<section class="content-grid">
+  <article class="card products">
+    <h3>Productos</h3>
+
+    <input [ngModel]="filter()" (ngModelChange)="filter.set($event)" placeholder="Buscar producto..." class="search-input" />
+    <div class="category-row" *ngIf="!filter()">
+      <button
+        type="button"
+        *ngFor="let categoria of categorias()"
+        (click)="activeCategory.set(categoria)"
+        [class.active]="activeCategory() === categoria"
+      >
+        {{ categoria }}
+      </button>
+    </div>
+    <div class="product-grid">
+      <button
+        type="button"
+        class="product-item"
+        *ngFor="let p of productosFiltrados()"
+        (click)="selectedProductId.set(p.idProducto); addItem()"
+      >
+        <p>{{ p.nombre }}</p>
+        <small>{{ p.precio | currency: 'PEN' : 'symbol' : '1.2-2' }}</small>
+        <span *ngIf="getCartItem(p.idProducto) as inCart">{{ inCart.cantidad }}</span>
+      </button>
+    </div>
+  </article>
+
+  <article class="card cart">
+    <div class="cart-head">
+      <h3>Detalle de venta</h3>
+      <small>{{ carrito().length }} items</small>
+    </div>
+
+    <div class="cart-list" *ngIf="carrito().length > 0; else emptyCart">
+      <div class="cart-row" *ngFor="let item of carrito()">
+        <div class="info">
+          <p>{{ item.nombre }}</p>
+          <small>{{ item.precioUnitario | currency: 'PEN' : 'symbol' : '1.2-2' }} c/u</small>
+        </div>
+        <div class="qty">
+          <button type="button" (click)="updateQty(item.idProducto, -1)">-</button>
+          <span>{{ item.cantidad }}</span>
+          <button type="button" (click)="updateQty(item.idProducto, 1)">+</button>
+        </div>
+        <strong>{{ item.subtotal | currency: 'PEN' : 'symbol' : '1.2-2' }}</strong>
+        <button type="button" class="danger" (click)="removeItem(item.idProducto)">x</button>
+      </div>
+    </div>
+    <ng-template #emptyCart>
+      <p class="empty">Agrega productos a la venta.</p>
+    </ng-template>
+
+    <div class="form-zone">
+      <div class="toggle-row">
+        <button type="button" *ngFor="let tipo of tiposComprobante" (click)="tipoComprobante.set(tipo)" [class.active]="tipoComprobante() === tipo">
+          {{ tipo }}
+        </button>
+      </div>
+
+      <div class="field-row">
+        <input [ngModel]="serieComprobante()" (ngModelChange)="serieComprobante.set($event)" placeholder="Serie" />
+        <input [ngModel]="numeroComprobante()" (ngModelChange)="numeroComprobante.set($event)" placeholder="Número" />
+      </div>
+
+      <p class="hint">Serie y número juntos o ambos vacíos.</p>
+
+      <div class="toggle-row small">
+        <button type="button" *ngFor="let metodo of metodosPago" (click)="metodoPago.set(metodo)" [class.active]="metodoPago() === metodo">
+          {{ metodo }}
+        </button>
+      </div>
+
+      <div class="totals">
+        <div><span>Subtotal</span><span>{{ subtotal() | currency: 'PEN' : 'symbol' : '1.2-2' }}</span></div>
+        <div><span>IGV (18%)</span><span>{{ igv() | currency: 'PEN' : 'symbol' : '1.2-2' }}</span></div>
+        <div class="total"><span>Total</span><span>{{ total() | currency: 'PEN' : 'symbol' : '1.2-2' }}</span></div>
+      </div>
+
+      <button type="button" class="primary submit" [disabled]="posStore.actionLoading()" (click)="submitVenta()">
+        {{ posStore.actionLoading() ? 'Registrando...' : 'Registrar venta' }}
+      </button>
+    </div>
+  </article>
+</section>

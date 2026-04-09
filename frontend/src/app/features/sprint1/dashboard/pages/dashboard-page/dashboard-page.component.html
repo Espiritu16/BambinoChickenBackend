@@ -1,0 +1,89 @@
+<section class="page-head">
+  <div>
+    <h2>Dashboard</h2>
+    <p>Resumen del día y estado operativo del punto de venta.</p>
+  </div>
+  <app-status-pill
+    [label]="posStore.hasCajaAbierta() ? 'Caja abierta' : 'Caja cerrada'"
+    [variant]="posStore.hasCajaAbierta() ? 'success' : 'danger'"
+  />
+</section>
+
+<app-error-banner [error]="posStore.error()" (dismiss)="posStore.clearError()" />
+
+<app-loading-skeleton *ngIf="posStore.initialLoading()" [count]="4" />
+
+<section *ngIf="!posStore.initialLoading()" class="metrics-grid">
+  <app-metric-card label="Ventas del Día" [value]="posStore.totalVendido()" [isCurrency]="true" />
+  <app-metric-card label="Ticket promedio" [value]="posStore.ventasRegistradas().length ? ((posStore.totalVendido() / posStore.ventasRegistradas().length).toFixed(2)) : '0.00'" [isCurrency]="true" />
+  <app-metric-card label="Ventas registradas" [value]="posStore.ventasRegistradas().length" />
+  <app-metric-card
+    label="Estado de caja"
+    [value]="posStore.hasCajaAbierta() ? 'Abierta' : 'Cerrada'"
+  />
+</section>
+
+<section *ngIf="!posStore.initialLoading()" class="cards-grid">
+  <article class="card">
+    <h3>Acciones rápidas</h3>
+    <div class="links">
+      <a routerLink="/pos/ventas/nueva">Nueva Venta</a>
+      <a routerLink="/pos/ventas">Ver Ventas</a>
+      <a routerLink="/pos/caja">Gestionar Caja</a>
+    </div>
+  </article>
+
+  <article class="card wide">
+    <div class="card-head">
+      <h3>Ventas recientes</h3>
+      <a routerLink="/pos/ventas">Ver todas</a>
+    </div>
+    <div class="empty" *ngIf="ventasRecientes.length === 0">No hay ventas registradas hoy.</div>
+    <div class="recent-list" *ngIf="ventasRecientes.length > 0">
+      <div class="recent-item" *ngFor="let venta of ventasRecientes">
+        <div>
+          <p>{{ venta.serieComprobante || '-' }}-{{ venta.numeroComprobante || '-' }}</p>
+          <small>{{ venta.fechaVenta | date: 'HH:mm' }} · {{ venta.metodoPago }}</small>
+        </div>
+        <div class="right">
+          <strong [class.anulada]="venta.estado === 'ANULADA'">{{ venta.total | currency: 'PEN' : 'symbol' : '1.2-2' }}</strong>
+          <app-status-pill [label]="venta.estado" [variant]="venta.estado === 'ANULADA' ? 'danger' : 'success'" />
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<article *ngIf="!posStore.initialLoading()" class="card">
+  <h3>Ventas por Método de Pago</h3>
+  <div class="payment-grid">
+    <div class="payment-item">
+      <span class="dot efectivo"></span>
+      <div>
+        <small>Efectivo</small>
+        <p>{{ posStore.ventasPorMetodo().EFECTIVO | currency: 'PEN' : 'symbol' : '1.2-2' }}</p>
+      </div>
+    </div>
+    <div class="payment-item">
+      <span class="dot yape"></span>
+      <div>
+        <small>Yape</small>
+        <p>{{ posStore.ventasPorMetodo().YAPE | currency: 'PEN' : 'symbol' : '1.2-2' }}</p>
+      </div>
+    </div>
+    <div class="payment-item">
+      <span class="dot plin"></span>
+      <div>
+        <small>Plin</small>
+        <p>{{ posStore.ventasPorMetodo().PLIN | currency: 'PEN' : 'symbol' : '1.2-2' }}</p>
+      </div>
+    </div>
+    <div class="payment-item">
+      <span class="dot tarjeta"></span>
+      <div>
+        <small>Tarjeta</small>
+        <p>{{ posStore.ventasPorMetodo().TARJETA | currency: 'PEN' : 'symbol' : '1.2-2' }}</p>
+      </div>
+    </div>
+  </div>
+</article>

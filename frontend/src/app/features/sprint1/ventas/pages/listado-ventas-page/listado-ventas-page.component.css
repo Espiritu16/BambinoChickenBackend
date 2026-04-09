@@ -1,0 +1,166 @@
+:host {
+  display: grid;
+  gap: 10px;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+}
+
+h2 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 22px;
+  font-weight: 300;
+}
+
+.head p {
+  margin: 4px 0 0;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+input,
+textarea {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #f9fafb;
+  font-size: 12px;
+}
+
+.head .search {
+  width: min(360px, 100%);
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filters button {
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.filters button.active {
+  background: #4caf50;
+  color: white;
+}
+
+.filters span {
+  margin-left: auto;
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.table-wrapper {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 660px;
+}
+
+th,
+td {
+  border-bottom: 1px solid #ebf1f8;
+  padding: 8px;
+  text-align: left;
+  font-size: 12px;
+}
+
+th {
+  color: #6b7280;
+  background: #f8fafc;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 11px;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.danger {
+  color: white;
+  background: #ef4444;
+}
+
+.empty {
+  padding: 16px;
+}
+
+.empty h3 {
+  margin: 0;
+  color: #1d3555;
+  font-weight: 400;
+}
+
+.empty p {
+  margin: 8px 0 0;
+  color: #617995;
+  font-size: 12px;
+}
+
+.motivo-box {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px;
+}
+
+.motivo-box label {
+  display: block;
+  color: #324b69;
+  font-size: 12px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.motivo-box textarea {
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .head .search {
+    width: 100%;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+  }
+
+  .filters span {
+    margin-left: 0;
+    width: 100%;
+  }
+}

@@ -1,0 +1,42 @@
+<section class="head">
+  <div>
+    <h2>Resumen diario</h2>
+    <p>Consolidado diario de ventas y estado de operaciones.</p>
+  </div>
+  <div class="head-actions">
+    <input type="date" [ngModel]="fechaFiltro()" (ngModelChange)="fechaFiltro.set($event)" />
+    <button type="button" [class.active]="modo() === 'local'" (click)="modo.set('local')">Mi Local</button>
+    <button type="button" *ngIf="authService.user()?.rol === 'ADMINISTRADOR'" [class.active]="modo() === 'general'" (click)="modo.set('general')">General</button>
+  </div>
+</section>
+
+<app-error-banner [error]="posStore.error()" (dismiss)="posStore.clearError()" />
+
+<section class="grid" *ngIf="posStore.resumenDiario() as resumen; else noData">
+  <app-metric-card label="Fecha" [value]="resumen.fecha" />
+  <app-metric-card label="Cantidad de ventas" [value]="resumen.cantidadVentas" />
+  <app-metric-card label="Monto total backend" [value]="resumen.montoTotal" [isCurrency]="true" />
+  <app-metric-card label="Anuladas (local UI)" [value]="posStore.ventasAnuladas()" />
+</section>
+
+<ng-template #noData>
+  <article class="empty">
+    <h3>Aún no hay resumen disponible</h3>
+    <p>Verifica conectividad con backend y realiza al menos una venta.</p>
+  </article>
+</ng-template>
+
+<article class="card">
+  <h3>Desglose por Método de Pago</h3>
+  <div class="method-list">
+    <div class="method" *ngFor="let metodo of metodos()">
+      <div class="line">
+        <span>{{ metodo.label }}</span>
+        <span>{{ metodo.value | currency: 'PEN' : 'symbol' : '1.2-2' }}</span>
+      </div>
+      <div class="bar">
+        <div class="fill" [style.width.%]="metodo.pct"></div>
+      </div>
+    </div>
+  </div>
+</article>

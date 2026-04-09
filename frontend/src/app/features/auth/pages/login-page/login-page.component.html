@@ -1,0 +1,44 @@
+<main class="login-page">
+  <section class="login-card" [class.animate-shake]="shaking() && !!errorMessage()">
+    <header class="brand">
+      <img src="/logo.jpeg" alt="Bambino Chicken" />
+      <h1>Bambino Chicken</h1>
+      <p class="subtitle">Sistema POS - Inicia sesion</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label for="correo">Correo electronico</label>
+      <div class="field-box">
+        <span class="icon">@</span>
+        <input id="correo" type="email" formControlName="correo" placeholder="correo@bambino.pe" />
+      </div>
+
+      <label for="contrasena">Contrasena</label>
+      <div class="field-box">
+        <span class="icon">#</span>
+        <input
+          id="contrasena"
+          [type]="showPassword() ? 'text' : 'password'"
+          formControlName="contrasena"
+          placeholder="Ingresa tu contrasena"
+        />
+        <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+          {{ showPassword() ? 'Ocultar' : 'Ver' }}
+        </button>
+      </div>
+
+      <button type="submit" [disabled]="loading()" class="submit-btn">
+        {{ loading() ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+
+    <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+    <div class="test-users">
+      <p class="title"><strong>Usuarios de prueba:</strong></p>
+      <p>admin@bambino.com / 123456 (Administrador)</p>
+      <p>cajero@bambino.com / 123456 (Cajero)</p>
+      <p>mozo@bambino.com / 123456 (Mozo, sin acceso a POS)</p>
+    </div>
+  </section>
+</main>

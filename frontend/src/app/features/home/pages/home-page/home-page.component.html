@@ -1,0 +1,37 @@
+<section class="home-wrapper" *ngIf="authService.user() as user">
+  <article class="home-card">
+    <header>
+      <img src="/logo.jpeg" alt="Bambino Chicken" class="logo" />
+      <h1>Bambino Chicken</h1>
+      <p class="system">Sistema de Gestion</p>
+      <p class="welcome">
+        Bienvenido, <span>{{ user.nombre }}</span>
+      </p>
+      <small class="role">{{ user.rol }}</small>
+    </header>
+
+    <section class="actions">
+      <article class="card card-disabled">
+        <span class="icon">POS</span>
+        <span class="title">Punto de Venta</span>
+        <span class="hint">Proximamente</span>
+      </article>
+
+      <article class="card card-disabled">
+        <span class="icon">MES</span>
+        <span class="title">Vista Mesero</span>
+        <span class="hint">Proximamente</span>
+      </article>
+
+      <article class="card card-disabled">
+        <span class="icon">COC</span>
+        <span class="title">Vista Cocina</span>
+        <span class="hint">Proximamente</span>
+      </article>
+    </section>
+
+    <div class="footer">
+      <button type="button" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </article>
+</section>
