@@ -1,80 +1,44 @@
-import { Injectable, computed, signal } from '@angular/core';
-import { AuthUser, LoginRequest, Rol } from './auth.models';
-
-interface MockAccount {
-  id: number;
-  correo: string;
-  contrasena: string;
-  nombre: string;
-  rol: Rol;
-  idLocal: number;
-  localNombre: string;
-}
-
-const MOCK_ACCOUNTS: MockAccount[] = [
-  {
-    id: 1,
-    correo: 'admin@bambino.com',
-    contrasena: '123456',
-    nombre: 'Administrador',
-    rol: 'ADMINISTRADOR',
-    idLocal: 1,
-    localNombre: 'Local Principal'
-  },
-  {
-    id: 2,
-    correo: 'cajero@bambino.com',
-    contrasena: '123456',
-    nombre: 'Cajero',
-    rol: 'CAJERO',
-    idLocal: 1,
-    localNombre: 'Local Principal'
-  },
-  {
-    id: 3,
-    correo: 'mozo@bambino.com',
-    contrasena: '123456',
-    nombre: 'Mozo',
-    rol: 'MOZO',
-    idLocal: 1,
-    localNombre: 'Local Principal'
-  }
-];
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { AuthUser, LoginApiResponse, LoginRequest, Rol } from './auth.models';
 
 const SESSION_KEY = 'bambino_auth';
+const AUTH_BASE_URL = 'http://localhost:8080/api/v1/auth';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly http = inject(HttpClient);
   private readonly userSignal = signal<AuthUser | null>(this.restoreSession());
 
   readonly user = computed(() => this.userSignal());
   readonly isAuthenticated = computed(() => !!this.userSignal());
 
   async login(request: LoginRequest): Promise<AuthUser> {
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    try {
+      const response = await firstValueFrom(
+        this.http.post<LoginApiResponse>(`${AUTH_BASE_URL}/login`, request)
+      );
 
-    const correo = request.correo.trim().toLowerCase();
-    const account = MOCK_ACCOUNTS.find(
-      (item) => item.correo.toLowerCase() === correo && item.contrasena === request.contrasena
-    );
+      const session: AuthUser = {
+        id: response.data.idUsuario,
+        correo: response.data.correo,
+        nombre: response.data.nombre,
+        rol: response.data.rol,
+        idLocal: response.data.idLocal,
+        localNombre: response.data.localNombre,
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
+        tokenType: response.data.tokenType,
+        accessTokenExpiresAt: response.data.accessTokenExpiresAt
+      };
 
-    if (!account) {
-      throw new Error('Credenciales invalidas');
+      this.userSignal.set(session);
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      return session;
+    } catch (error) {
+      throw new Error(this.mapLoginError(error));
     }
-
-    const session: AuthUser = {
-      id: account.id,
-      correo: account.correo,
-      nombre: account.nombre,
-      rol: account.rol,
-      idLocal: account.idLocal,
-      localNombre: account.localNombre,
-      accessToken: `mock_${Math.random().toString(36).slice(2)}`
-    };
-
-    this.userSignal.set(session);
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    return session;
   }
 
   logout(): void {
@@ -99,5 +63,24 @@ export class AuthService {
       sessionStorage.removeItem(SESSION_KEY);
       return null;
     }
+  }
+
+  private mapLoginError(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      const backendMessage = typeof error.error?.message === 'string'
+        ? error.error.message
+        : 'No se pudo iniciar sesion';
+
+      if (error.status === 0) {
+        return 'No hay conexión con backend';
+      }
+      return backendMessage;
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    return 'No se pudo iniciar sesion';
   }
 }

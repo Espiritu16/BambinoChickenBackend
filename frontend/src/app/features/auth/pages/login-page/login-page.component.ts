@@ -16,6 +16,11 @@ export class LoginPageComponent {
   protected readonly showPassword = signal(false);
   protected readonly shaking = signal(false);
   protected readonly errorMessage = signal('');
+  protected readonly testUsers = [
+    { correo: 'admin@bambino.com', contrasena: '123456', descripcion: 'Administrador' },
+    { correo: 'cajero@bambino.com', contrasena: '123456', descripcion: 'Cajero' },
+    { correo: 'mozo@bambino.com', contrasena: '123456', descripcion: 'Mozo, sin acceso a POS' }
+  ] as const;
   protected readonly form;
 
   constructor(
@@ -53,5 +58,10 @@ export class LoginPageComponent {
 
   togglePasswordVisibility(): void {
     this.showPassword.set(!this.showPassword());
+  }
+
+  useTestUser(correo: string, contrasena: string): void {
+    this.form.setValue({ correo, contrasena });
+    this.errorMessage.set('');
   }
 }

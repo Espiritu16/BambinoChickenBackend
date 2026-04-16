@@ -36,9 +36,16 @@
 
     <div class="test-users">
       <p class="title"><strong>Usuarios de prueba:</strong></p>
-      <p>admin@bambino.com / 123456 (Administrador)</p>
-      <p>cajero@bambino.com / 123456 (Cajero)</p>
-      <p>mozo@bambino.com / 123456 (Mozo, sin acceso a POS)</p>
+      <button
+        type="button"
+        class="test-user-btn"
+        *ngFor="let user of testUsers"
+        (click)="useTestUser(user.correo, user.contrasena)"
+      >
+        <span class="user-mail">{{ user.correo }}</span>
+        <span class="user-pass">/ {{ user.contrasena }}</span>
+        <span class="user-role">({{ user.descripcion }})</span>
+      </button>
     </div>
   </section>
 </main>

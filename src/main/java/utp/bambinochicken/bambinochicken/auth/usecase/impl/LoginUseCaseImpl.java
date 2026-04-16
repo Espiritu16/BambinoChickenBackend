@@ -1,7 +1,7 @@
 package utp.bambinochicken.bambinochicken.auth.usecase.impl;
 
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import utp.bambinochicken.bambinochicken.auth.dto.LoginRequest;
 import utp.bambinochicken.bambinochicken.auth.dto.LoginResponse;
 import utp.bambinochicken.bambinochicken.auth.entity.AuthSessionEntity;
@@ -17,6 +17,8 @@ import java.util.UUID;
 
 @Service
 public class LoginUseCaseImpl implements LoginUseCase {
+
+    private static final String LEGACY_PLACEHOLDER_HASH = "$2a$10$abcdefghijklmnopqrstuv/0123456789ABCDEfghijKLMNO";
 
     private final AuthMapper authMapper;
     private final AuthUserStore authUserStore;
@@ -47,7 +49,7 @@ public class LoginUseCaseImpl implements LoginUseCase {
             throw DomainException.forbidden("Usuario inactivo");
         }
 
-        if (!passwordEncoder.matches(contrasena, user.passwordHash())) {
+        if (!passwordMatches(contrasena, user.passwordHash())) {
             throw DomainException.unauthorized("Credenciales invalidas");
         }
 
@@ -63,6 +65,26 @@ public class LoginUseCaseImpl implements LoginUseCase {
                 issuedAt.plusDays(7)
         );
 
-        return authMapper.toLoginResponse(authRepository.save(session));
+        return authMapper.toLoginResponse(authRepository.save(session), user);
+    }
+
+    private boolean passwordMatches(String rawPassword, String storedHash) {
+        if (storedHash == null || storedHash.isBlank()) {
+            return false;
+        }
+
+        try {
+            if (storedHash.startsWith("$2")) {
+                if (passwordEncoder.matches(rawPassword, storedHash)) {
+                    return true;
+                }
+                // Compatibilidad temporal para hashes de demo existentes en BD.
+                return LEGACY_PLACEHOLDER_HASH.equals(storedHash) && "123456".equals(rawPassword);
+            }
+        } catch (IllegalArgumentException ignored) {
+            return LEGACY_PLACEHOLDER_HASH.equals(storedHash) && "123456".equals(rawPassword);
+        }
+
+        return rawPassword.equals(storedHash);
     }
 }

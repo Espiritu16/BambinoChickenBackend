@@ -11,8 +11,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         <h3>{{ title }}</h3>
         <p>{{ message }}</p>
         <div class="actions">
-          <button class="ghost" type="button" (click)="cancel.emit()">Cancelar</button>
-          <button class="danger" type="button" (click)="confirm.emit()">Confirmar</button>
+          <button class="ghost" type="button" (click)="cancel.emit()">{{ cancelText }}</button>
+          <button class="confirm" type="button" (click)="confirm.emit()">{{ confirmText }}</button>
         </div>
       </article>
     </section>
@@ -34,17 +34,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         background: white;
         border-radius: 16px;
         padding: 20px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 16px 30px rgba(15, 23, 42, 0.18);
       }
 
       h3 {
         margin: 0;
-        color: #10233c;
+        color: #daa520;
       }
 
       p {
         margin: 8px 0 0;
-        color: #44576f;
+        color: #4b5563;
       }
 
       .actions {
@@ -63,13 +64,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
       }
 
       .ghost {
-        background: #e2e8f0;
-        color: #0f172a;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        color: #6b7280;
       }
 
-      .danger {
-        background: #dc2626;
+      .confirm {
+        background: #4caf50;
         color: white;
+      }
+
+      .confirm:hover {
+        background: #43a047;
       }
     `
   ]
@@ -78,6 +84,8 @@ export class ConfirmDialogComponent {
   @Input() open = false;
   @Input() title = '';
   @Input() message = '';
+  @Input() confirmText = 'Confirmar';
+  @Input() cancelText = 'Cancelar';
   @Output() cancel = new EventEmitter<void>();
   @Output() confirm = new EventEmitter<void>();
 }

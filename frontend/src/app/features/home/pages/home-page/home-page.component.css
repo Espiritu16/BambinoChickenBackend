@@ -111,6 +111,24 @@ h1 {
   color: #94a3b8;
 }
 
+.card-admin {
+  border-color: #dae7ff;
+  background: #f7faff;
+}
+
+.card-admin .icon {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.card-admin .title {
+  color: #1e3a8a;
+}
+
+.card-admin .hint {
+  color: #64748b;
+}
+
 button {
   border: 0;
   background: transparent;

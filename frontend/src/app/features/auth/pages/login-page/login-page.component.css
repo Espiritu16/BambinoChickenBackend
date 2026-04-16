@@ -149,6 +149,38 @@ input:focus {
   color: #b7bcc3;
 }
 
+.test-user-btn {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  color: #64748b;
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-top: 6px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.test-user-btn:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.user-mail {
+  color: #334155;
+  font-weight: 600;
+}
+
+.user-pass {
+  color: #64748b;
+}
+
+.user-role {
+  color: #94a3b8;
+}
+
 @keyframes shake {
   0%,
   100% {

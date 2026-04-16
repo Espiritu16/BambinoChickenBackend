@@ -5,6 +5,9 @@ public record AuthUserRecord(
         String correo,
         String passwordHash,
         String rol,
-        boolean activo
+        boolean activo,
+        String nombre,
+        Long idLocal,
+        String localNombre
 ) {
 }

@@ -11,6 +11,12 @@
     </header>
 
     <section class="actions">
+      <a class="card card-admin" *ngIf="user.rol === 'ADMINISTRADOR'" routerLink="/admin/usuarios">
+        <span class="icon">ADM</span>
+        <span class="title">Administrador</span>
+        <span class="hint">Gestionar usuarios</span>
+      </a>
+
       <article class="card card-disabled">
         <span class="icon">POS</span>
         <span class="title">Punto de Venta</span>

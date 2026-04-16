@@ -1,0 +1,144 @@
+<section class="admin-layout" *ngIf="authService.user() as user">
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <img src="/logo.jpeg" alt="Bambino Chicken" />
+      <div>
+        <h2>Panel Admin</h2>
+        <p>Gestión de usuarios</p>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <button type="button" class="menu-item active">Usuarios</button>
+    </nav>
+
+    <div class="admin-box">
+      <p class="label">Sesión</p>
+      <p class="value">{{ user.nombre }}</p>
+      <small>{{ user.rol }}</small>
+    </div>
+
+    <div class="sidebar-actions">
+      <button type="button" class="secondary" (click)="goHome()">Volver al menú</button>
+      <button type="button" class="danger" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="admin-content">
+    <header class="topbar">
+      <h1>Gestión de Usuarios</h1>
+      <p>Crear, buscar, editar e inactivar usuarios</p>
+    </header>
+
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <section class="toolbar">
+      <input
+        type="search"
+        [value]="search()"
+        (input)="onSearchInput($event)"
+        placeholder="Buscar por nombre, apellido o correo"
+      />
+      <button type="button" class="primary" (click)="startCreate()">Nuevo usuario</button>
+    </section>
+
+    <section class="content-grid">
+      <article class="users-card">
+        <header>
+          <h3>Usuarios registrados</h3>
+          <small *ngIf="loading()">Cargando...</small>
+        </header>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombres</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of users()" [class.row-editing]="isEditing(u)">
+              <td>{{ u.idUsuario }}</td>
+              <td>{{ u.nombres }} {{ u.apellidos || '' }}</td>
+              <td>{{ u.correo }}</td>
+              <td>{{ u.rol }}</td>
+              <td>
+                <span class="badge" [class.inactive]="!isActive(u)">
+                  {{ isActive(u) ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="actions">
+                <button type="button" class="table-btn" (click)="startEdit(u)">Editar</button>
+                <button
+                  type="button"
+                  class="table-btn danger"
+                  [disabled]="!isActive(u)"
+                  (click)="requestInactivate(u)"
+                >
+                  Inactivar
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="!loading() && users().length === 0">
+              <td colspan="6" class="empty">No hay usuarios para mostrar</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="form-card">
+        <header>
+          <h3>{{ selectedUserId() ? 'Editar usuario' : 'Crear usuario' }}</h3>
+          <small *ngIf="selectedUserId()">ID: {{ selectedUserId() }}</small>
+        </header>
+
+        <form [formGroup]="form" (ngSubmit)="saveUser()">
+          <label>Nombres</label>
+          <input type="text" formControlName="nombres" />
+
+          <label>Apellidos</label>
+          <input type="text" formControlName="apellidos" />
+
+          <label>Correo</label>
+          <input type="email" formControlName="correo" />
+
+          <label>Contraseña {{ selectedUserId() ? '(opcional en edición)' : '' }}</label>
+          <input type="text" formControlName="contrasena" />
+
+          <label>Rol</label>
+          <select formControlName="idRol">
+            <option *ngFor="let role of roles()" [value]="role.idRol">{{ role.nombre }}</option>
+          </select>
+
+          <button type="submit" class="primary" [disabled]="saving()">
+            {{ saving() ? 'Guardando...' : (selectedUserId() ? 'Actualizar usuario' : 'Crear usuario') }}
+          </button>
+        </form>
+      </article>
+    </section>
+  </main>
+</section>
+
+<app-confirm-dialog
+  [open]="confirmDialogOpen()"
+  title="Confirmar inactivación"
+  [message]="'Se inactivará el usuario ' + (userPendingInactivation()?.correo || '') + '. ¿Deseas continuar?'"
+  (cancel)="cancelInactivation()"
+  (confirm)="confirmInactivation()"
+/>
+
+<app-confirm-dialog
+  [open]="saveConfirmOpen()"
+  [title]="pendingSaveUserId() ? 'Confirmar actualización' : 'Confirmar creación'"
+  [message]="pendingSaveUserId()
+    ? 'Se actualizarán los datos del usuario seleccionado. ¿Deseas continuar?'
+    : 'Se creará un nuevo usuario con la información ingresada. ¿Deseas continuar?'"
+  [confirmText]="pendingSaveUserId() ? 'Actualizar' : 'Crear'"
+  cancelText="Cancelar"
+  (cancel)="cancelSaveConfirmation()"
+  (confirm)="confirmSaveUser()"
+/>
