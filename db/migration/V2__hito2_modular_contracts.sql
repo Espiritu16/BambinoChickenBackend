@@ -1,6 +1,0 @@
--- Hito 2: contrato de modulos backend
--- No aplica cambios DDL todavia.
--- Objetivo: dejar versionado para inicio de Hito 3.
---
--- Modulos cubiertos:
--- caja, ventas, pedidos, inventario, proveedores, reportes.

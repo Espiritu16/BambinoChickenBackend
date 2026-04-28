@@ -1,5 +1,0 @@
-
-"ID_USUARIO","NOMBRES","APELLIDOS","CORREO","CONTRASENA","ESTADO","ID_ROL","CREADO_EN","ACTUALIZADO_EN","CREADO_POR","ACTUALIZADO_POR"
-1,"Kevin","Espiritu","admin@bambino.com","$2a$10$abcdefghijklmnopqrstuv/0123456789ABCDEfghijKLMNO",1,1,"09-APR-26 06.03.35.289063 AM","09-APR-26 06.03.35.826511 AM","SYSTEM","SYSTEM"
-2,"Mauricio","Palma","cajero@bambino.com","$2a$10$abcdefghijklmnopqrstuv/0123456789ABCDEfghijKLMNO",1,2,"09-APR-26 06.03.35.289063 AM","09-APR-26 06.03.35.826575 AM","SYSTEM","SYSTEM"
-3,"Jaren","Sullcapuma","mozo@bambino.com","$2a$10$abcdefghijklmnopqrstuv/0123456789ABCDEfghijKLMNO",1,3,"09-APR-26 06.03.35.289063 AM","09-APR-26 06.03.35.826588 AM","SYSTEM","SYSTEM"
