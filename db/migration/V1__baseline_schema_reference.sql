@@ -1,0 +1,5 @@
+-- Baseline del esquema para control de versiones de BD.
+-- Referencia principal:
+--   db/BAMBINO_mysql_full.sql
+--   db/BAMBINO_TODO.sql
+-- Este archivo se mantiene como marcador de inicio para Hito 2.

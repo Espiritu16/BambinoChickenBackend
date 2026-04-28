@@ -1,0 +1,151 @@
+openapi: 3.0.3
+info:
+  title: Bambino Chicken API
+  version: "0.2.0-hito2"
+  description: Contratos REST definidos por modulos para Hito 2.
+servers:
+  - url: /api/v1
+paths:
+  /caja:
+    get:
+      summary: Listar cajas
+      responses:
+        "200": { description: OK }
+  /caja/abierta:
+    get:
+      summary: Obtener caja abierta por local
+      parameters:
+        - in: query
+          name: idLocal
+          schema: { type: integer, format: int64 }
+      responses:
+        "200": { description: OK }
+  /caja/aperturas:
+    post:
+      summary: Registrar apertura de caja
+      responses:
+        "200": { description: OK }
+  /caja/{idCaja}/cierres:
+    post:
+      summary: Registrar cierre de caja
+      parameters:
+        - in: path
+          name: idCaja
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200": { description: OK }
+  /ventas:
+    get:
+      summary: Listar ventas
+      responses:
+        "200": { description: OK }
+    post:
+      summary: Registrar venta
+      responses:
+        "200": { description: OK }
+  /ventas/{idVenta}/anulacion:
+    post:
+      summary: Anular venta
+      parameters:
+        - in: path
+          name: idVenta
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200": { description: OK }
+  /ventas/resumen-diario:
+    get:
+      summary: Resumen de ventas por dia
+      parameters:
+        - in: query
+          name: idLocal
+          schema: { type: integer, format: int64 }
+      responses:
+        "200": { description: OK }
+  /pedidos:
+    get:
+      summary: Listar pedidos
+      responses:
+        "200": { description: OK }
+    post:
+      summary: Registrar pedido
+      responses:
+        "200": { description: OK }
+  /pedidos/{idPedido}/estado:
+    patch:
+      summary: Actualizar estado de pedido
+      parameters:
+        - in: path
+          name: idPedido
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200": { description: OK }
+  /pedidos/{idPedido}/anulacion:
+    post:
+      summary: Anular pedido
+      parameters:
+        - in: path
+          name: idPedido
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200": { description: OK }
+  /inventario/productos:
+    get:
+      summary: Listar inventario de productos
+      responses:
+        "200": { description: OK }
+  /inventario/movimientos:
+    get:
+      summary: Listar movimientos de inventario
+      responses:
+        "200": { description: OK }
+    post:
+      summary: Registrar movimiento de inventario
+      responses:
+        "200": { description: OK }
+  /proveedores:
+    get:
+      summary: Listar proveedores
+      responses:
+        "200": { description: OK }
+    post:
+      summary: Crear proveedor
+      responses:
+        "200": { description: OK }
+  /proveedores/{idProveedor}:
+    put:
+      summary: Actualizar proveedor
+      parameters:
+        - in: path
+          name: idProveedor
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200": { description: OK }
+  /proveedores/{idProveedor}/inactivar:
+    patch:
+      summary: Inactivar proveedor
+      parameters:
+        - in: path
+          name: idProveedor
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200": { description: OK }
+  /reportes/ventas:
+    post:
+      summary: Generar reporte de ventas
+      responses:
+        "200": { description: OK }
+  /reportes/kpis:
+    get:
+      summary: Obtener kpis
+      parameters:
+        - in: query
+          name: idLocal
+          schema: { type: integer, format: int64 }
+      responses:
+        "200": { description: OK }
