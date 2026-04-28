@@ -23,6 +23,10 @@
 hs_err_pid*
 replay_pid*
 
+# System files
+.DS_Store
+Thumbs.db
+
 # Maven/Spring build
 target/
 .mvn/wrapper/maven-wrapper.jar
